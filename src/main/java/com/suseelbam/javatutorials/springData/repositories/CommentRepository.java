@@ -1,7 +1,8 @@
 package com.suseelbam.javatutorials.springData.repositories;
 
-import com.suseelbam.javatutorials.springData.entities.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+import java.io.Serializable;
+
+public interface CommentRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
 }

@@ -1,9 +1,6 @@
 package com.suseelbam.javatutorials.springData.repositories;
 
-import com.suseelbam.javatutorials.springData.entities.Address;
-import com.suseelbam.javatutorials.springData.entities.Comment;
-import com.suseelbam.javatutorials.springData.entities.Post;
-import com.suseelbam.javatutorials.springData.entities.Users;
+import com.suseelbam.javatutorials.springData.entities.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +12,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -32,6 +32,9 @@ public class PostRepositoryCompTest {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
 
     private Address address1;
     private Address address2;
@@ -59,7 +62,7 @@ public class PostRepositoryCompTest {
         address2 = new Address("4121 Appian Way Ct", "Gahanna", "HO", 43231, "USA");
         address3 = new Address("4122 Appian Way Ct", "Worthington", "HO", 43232, "USA");
         address4 = new Address("4123 Appian Way Ct", "grove port", "HO", 43233, "USA");
-        addressRepository.saveAll(Arrays.asList(address1, address2, address3, address4));
+        addressRepository.saveAll(asList(address1, address2, address3, address4));
 
         userA = new Users("bamsuseel", "bamsuseel@email.com",address1);
         userB = new Users("anil123", "anil123@email.com", address3);
@@ -68,7 +71,7 @@ public class PostRepositoryCompTest {
 
         userA.setCreatedBy("me");
 
-        usersRepository.saveAll(Arrays.asList(userA, userB, userC, userD));
+        usersRepository.saveAll(asList(userA, userB, userC, userD));
 
         postA = new Post("spring data Jpa", "this is about spring data Jpa");
         postA.setLikes(1000);
@@ -96,12 +99,27 @@ public class PostRepositoryCompTest {
         commentTwoForPostB.setCommenter(userA);
         commentTwoForPostB.setPost(postB);
 
-        postRepository.saveAll(Arrays.asList(postA, postB));
-        commentRepository.saveAll(Arrays.asList(commentOneForPostA, commentTwoForPostA, commentThreeForPostA,
+        postRepository.saveAll(asList(postA, postB));
+        commentRepository.saveAll(asList(commentOneForPostA, commentTwoForPostA, commentThreeForPostA,
                 commentOneForPostB, commentTwoForPostB));
 
-        postB.setComments(Arrays.asList(commentOneForPostB, commentTwoForPostB));
-        postA.setComments(Arrays.asList(commentOneForPostA, commentTwoForPostA, commentThreeForPostA));
+        postB.setComments(asList(commentOneForPostB, commentTwoForPostB));
+        postA.setComments(asList(commentOneForPostA, commentTwoForPostA, commentThreeForPostA));
+
+        Book bookA = new Book();
+        bookA.setTitle("spring data Jpa");
+        bookA.setWriters(asList(userA, userB));
+        bookA.setPages(230);
+        bookA.setPublication("fake publication");
+        Book bookB =   new Book();
+        bookB.setTitle("Spring DATA Jpa");
+        bookB.setWriters(singletonList(userC));
+
+        Book bookC = new Book();
+        bookC.setTitle("Spring MVC 4");
+        bookC.setWriters(singletonList(userD));
+
+        bookRepository.saveAll(Arrays.asList(bookA, bookB, bookC));
 
     }
 
@@ -120,6 +138,21 @@ public class PostRepositoryCompTest {
         //assert post.getComments().size() == 3;
         assert post.getLikes() == 1000;
         //assert post.getComments().containsAll(Arrays.asList(commentOneForPostA, commentTwoForPostA, commentThreeForPostA));
+    }
+
+    @Test
+    @Transactional
+    public void findAllyByTitleMatchsWithBookTitle_should_return_post_maching_with_book_titleOpenProjection() {
+        List<BookPost> posts = postRepository.findAllyByTitleMatchWithBookTitleOpenProjection();
+        assert posts.size() == 1;
+    }
+
+    @Test
+    @Transactional
+    public void findAllyByTitleMatchsWithBookTitle_should_return_post_maching_with_book_titleDynamicProjection() {
+
+        List<BookPostClass> posts = postRepository.usingNamedQueryMatchWithBookTitleDynamicProjection();
+        assert posts.size() == 1;
     }
 
 

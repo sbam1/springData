@@ -4,6 +4,7 @@ package com.suseelbam.javatutorials.springData.entities;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "USERS")
 public class Users extends BaseEntity {
 
     @Id

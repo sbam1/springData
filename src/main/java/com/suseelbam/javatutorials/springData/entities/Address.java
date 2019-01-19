@@ -3,6 +3,7 @@ package com.suseelbam.javatutorials.springData.entities;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "ADDRESS")
 public class Address extends BaseEntity {
 
     @Id
