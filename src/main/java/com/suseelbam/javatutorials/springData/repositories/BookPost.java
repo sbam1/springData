@@ -7,7 +7,7 @@ public interface BookPost {
     @Value("#{target.title}")
     String getTitle();
 
-    @Value("#{target.desc}")
+    @Value("#{target.descp}")
     String getDesc();
 
     @Value("#{target.likes}")

@@ -2,6 +2,7 @@ package com.suseelbam.javatutorials.springData.entities;
 
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "USERS")
@@ -17,6 +18,9 @@ public class Users extends BaseEntity {
 
     @OneToOne
     private Address address;
+
+    @ManyToMany(mappedBy = "writers", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    private List<Book> books;
 
     public Users() {
     }
@@ -57,5 +61,13 @@ public class Users extends BaseEntity {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 }

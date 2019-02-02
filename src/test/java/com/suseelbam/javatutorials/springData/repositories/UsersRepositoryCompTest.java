@@ -1,22 +1,32 @@
 package com.suseelbam.javatutorials.springData.repositories;
 
+import com.suseelbam.javatutorials.springData.SpringDataApplication;
+import com.suseelbam.javatutorials.springData.configuration.H2TestProfileJPAConfig;
 import com.suseelbam.javatutorials.springData.entities.Address;
 import com.suseelbam.javatutorials.springData.entities.Users;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import static org.junit.Assert.*;
 
 import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = {SpringDataApplication.class, H2TestProfileJPAConfig.class})
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@Ignore
 public class UsersRepositoryCompTest {
 
     @Autowired
@@ -32,8 +42,6 @@ public class UsersRepositoryCompTest {
 
     @Before
     public void setup() {
-        usersRepository.deleteAll();
-        addressRepository.deleteAll();
         address1 = new Address("4120 Appian Way Ct", "Columbus", "HO", 43230, "USA");
         address2 = new Address("4121 Appian Way Ct", "Gahanna", "HO", 43231, "USA");
         address3 = new Address("4122 Appian Way Ct", "Worthington", "HO", 43232, "USA");
@@ -47,16 +55,22 @@ public class UsersRepositoryCompTest {
         Users userE = new Users("sudha", "sudha@email.com", address3);
         Users userF = new Users("bhuwan", "bhuwan@email.com",address4);
 
-        userA.setCreatedBy("me");
+        userA.setCreatedBy("suseel bam");
 
         usersRepository.saveAll(Arrays.asList(userA, userB, userC, userD, userE, userF));
+    }
+
+    @After
+    public void cleanup() {
+        usersRepository.deleteAll();
+        addressRepository.deleteAll();
     }
 
 
     @Test
     public void findAll_should_return_all_users() {
         List<Users> searchResults = usersRepository.findAll();
-        assert searchResults.size() == 6;
+        assertEquals(6, searchResults.size());
 
     }
 
@@ -64,11 +78,11 @@ public class UsersRepositoryCompTest {
     @Transactional
     public void findAllByUserName_should_return_list_of_users_of_given_name() {
        List<Users> searchResult = usersRepository.findAllByUserName("bhuwan");
-        assert searchResult.size() == 1;
+        assertEquals(1, searchResult.size());
         Users user = searchResult.get(0);
-        assert user.getUserName() == "bhuwan";
-        assert user.getEmail() == "bhuwan@email.com";
-        assert user.getAddress().getStreet() == address4.getStreet();
+        assertEquals("bhuwan", user.getUserName());
+        assertEquals("bhuwan@email.com", user.getEmail());
+        assertEquals(address4.getStreet(), user.getAddress().getStreet());
 
     }
 
@@ -76,7 +90,7 @@ public class UsersRepositoryCompTest {
     public void save_should_save_given_user() {
         Users user = new Users("newUser", "new emailAddress", address4);
         usersRepository.save(user);
-        assert usersRepository.findAll().size() == 7;
+        assertEquals(7,usersRepository.findAll().size());
     }
 
 
@@ -86,9 +100,9 @@ public class UsersRepositoryCompTest {
         Users user = new Users("newUser", "newuser@email.com", address4);
         user.setId(10);
         Users updated = usersRepository.save(user);
-        assert usersRepository.findAll().size() == 6;
-        assert updated.getUserName() == "newUser";
-        assert updated.getEmail() == "newuser@email.com";
+        assertEquals(6, usersRepository.findAll().size());
+        assertEquals("newUser", updated.getUserName()) ;
+        assertEquals("newuser@email.com", updated.getEmail());
     }
 
 

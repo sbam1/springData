@@ -16,7 +16,7 @@ public class Book extends BaseEntity {
     private int pages;
     private String publication;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "USERS_ID")
     private List<Users> writers;
 

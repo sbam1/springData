@@ -21,11 +21,11 @@ import static javax.persistence.FetchType.EAGER;
                 })
         }
 )
-@NamedNativeQuery(
-        name="Post.usingNamedQueryMatchWithBookTitleDynamicProjection",
-        query="select p.title as title, p.description as desc, p.likes as likes, b.pages as pages, b.publication as pub from POST p INNER JOIN BOOK b ON p.title = b.title",
-        resultSetMapping="postBooks-mapping"
-)
+//@NamedNativeQuery(
+//        name="Post.usingNamedQueryMatchWithBookTitleDynamicProjection",
+//        query="select p.title as title, p.description as desc, p.likes as likes, b.pages as pages, b.publication as pub from POST p INNER JOIN BOOK b ON p.title = b.title",
+//        resultSetMapping="postBooks-mapping"
+//)
 @Entity
 @Table(name = "POST")
 public class Post extends BaseEntity{

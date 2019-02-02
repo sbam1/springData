@@ -1,6 +1,7 @@
 package com.suseelbam.javatutorials.springData.controllers;
 
 import com.suseelbam.javatutorials.springData.entities.Post;
+import com.suseelbam.javatutorials.springData.repositories.BookPost;
 import com.suseelbam.javatutorials.springData.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,12 @@ public class PostController {
     @ResponseBody
     public List<Post> getPosts() {
         return postService.getAllPost();
+    }
+
+    @RequestMapping("/special-posts")
+    @ResponseBody
+    public List<BookPost> getSpecialPosts() {
+        return postService.getSpecialPosts();
     }
 
     @RequestMapping("/")
